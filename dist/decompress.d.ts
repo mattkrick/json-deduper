@@ -1,7 +1,7 @@
-import { Transform } from "./utils";
+import {Transform} from './utils'
 interface Options {
-    transforms?: Transform[];
+  transforms?: Transform[]
 }
-declare const _default: (refTable: any[], options?: Options) => any;
-export default _default;
+declare const _default: (refTable: any[], options?: Options) => any
+export default _default
 //# sourceMappingURL=decompress.d.ts.map

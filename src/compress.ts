@@ -1,22 +1,22 @@
-import {isObject, Key, runTransforms, Transform} from "./utils";
+import {isObject, Key, runTransforms, Transform} from './utils'
 
 interface Entry {
-  parent: { [key: string]: any },
-  idx: string | number,
+  parent: {[key: string]: any}
+  idx: string | number
 }
 
 interface OCache {
   [hash: string]: {
     id: number
     value: any
-    refs: Entry[],
+    refs: Entry[]
   }
 }
 
 interface CompressContext {
   transforms: Transform[]
-  dedupeStrings: boolean,
-  dedupeNumbers: boolean,
+  dedupeStrings: boolean
+  dedupeNumbers: boolean
   objectCache: OCache
   numberCache: OCache
   stringCache: OCache
@@ -36,15 +36,19 @@ const upsertHash = (flatData: any, parent: any, idx: Key, hash: string, cache: O
   if (entry) {
     const {refs, id} = entry
     refs.push({
-      parent, idx
+      parent,
+      idx,
     })
     return id
   }
-  const id = nextID += 2
+  const id = (nextID += 2)
   cache[hash] = {
-    refs: [{
-      parent, idx
-    }],
+    refs: [
+      {
+        parent,
+        idx,
+      },
+    ],
     id,
     value: flatData,
   }
@@ -53,7 +57,11 @@ const upsertHash = (flatData: any, parent: any, idx: Key, hash: string, cache: O
 
 const handleNumber = (flatData: number, parent: any, idx: Key, context: CompressContext) => {
   const {dedupeNumbers, numberCache} = context
-  return dedupeNumbers ? upsertHash(flatData, parent, idx, String(flatData), numberCache) : Number.isInteger(flatData) && flatData >= 0 ? flatData * 2 + 1 : flatData
+  return dedupeNumbers
+    ? upsertHash(flatData, parent, idx, String(flatData), numberCache)
+    : Number.isInteger(flatData) && flatData >= 0
+    ? flatData * 2 + 1
+    : flatData
 }
 
 const handleString = (flatData: string, parent: any, idx: Key, context: CompressContext) => {
@@ -68,14 +76,19 @@ const handleObject = (flatData: any, parent: any, idx: Key, context: CompressCon
   return upsertHash(flatData, parent, idx, hash, objectCache)
 }
 
-const compress = (data: any, parent: object | undefined, idx: Key | undefined, context: CompressContext) => {
+const compress = (
+  data: any,
+  parent: object | undefined,
+  idx: Key | undefined,
+  context: CompressContext,
+) => {
   let flatData = data
   if (isObject(data)) {
     const {transformedData, ignoreKeys} = runTransforms(data, context.transforms, parent, idx)
     flatData = transformedData
     if (Array.isArray(transformedData)) {
       for (let i = 0; i < transformedData.length; i++) {
-        const item = transformedData[i];
+        const item = transformedData[i]
         if (!ignoreKeys.includes(i)) {
           flatData[i] = compress(item, transformedData, i, context)
         }
@@ -83,7 +96,7 @@ const compress = (data: any, parent: object | undefined, idx: Key | undefined, c
     } else {
       const keys = Object.keys(transformedData)
       for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
+        const key = keys[i]
         if (!ignoreKeys.includes(key)) {
           flatData[key] = compress(transformedData[key], transformedData, key, context)
         }
@@ -94,7 +107,7 @@ const compress = (data: any, parent: object | undefined, idx: Key | undefined, c
   if (!parent || SINGLE_BYTE.includes(flatData)) return flatData
   switch (typeof flatData) {
     case 'number':
-    return handleNumber(flatData, parent, idx!, context)
+      return handleNumber(flatData, parent, idx!, context)
     case 'string':
       return handleString(flatData, parent, idx!, context)
     default:
@@ -137,7 +150,7 @@ export default (json: any, options: Options = {}) => {
     dedupeStrings,
     dedupeNumbers,
     transforms: options.transforms || [],
-    objectToHash: new WeakMap()
+    objectToHash: new WeakMap(),
   }
 
   compress(json, undefined, undefined, context)

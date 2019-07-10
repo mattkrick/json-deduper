@@ -14,12 +14,12 @@ Smaller payloads mean faster websites
 - Traverses JSON payload, extracting every object & replacing it with a reference
 - After traversal is complete, it re-inlines unique objects
 - Duplicate objects are replace with a positive even number that serves as a pointer
-- Any pre-existing positive even numbers are turned to odd numbers for decompression, then back during decompression
+- Any pre-existing positive even numbers are turned to odd numbers during compression, then back during decompression
 
 ## Gotchas
 
-- The compressed object must be serialized before being decompressed to ensure there are no shared sub-objects
-- Decompression mutates the input object for performance reasons. If that's bad, just clone the object first.
+- The compressed object must be pure JSON (ie no shared sub-objects). Serializing via sending over a network ensures this.
+- Decompression mutates the compressed object for performance reasons. The compressed object is useless anyways, but if that's bad, just clone the object first.
 
 ## Usage
 

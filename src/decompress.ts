@@ -1,4 +1,4 @@
-import {isObject, Key, runTransforms, Transform} from "./utils";
+import {isObject, Key, runTransforms, Transform} from './utils'
 
 interface Options {
   transforms?: Transform[]
@@ -43,7 +43,7 @@ export default (refTable: any[], options: Options = {}) => {
   if (!Array.isArray(refTable)) return refTable
   const context = {
     transforms: options.transforms || [],
-    refTable
+    refTable,
   }
   for (let i = 0; i < refTable.length; i++) {
     const fragment = refTable[i]

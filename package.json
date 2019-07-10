@@ -1,8 +1,9 @@
 {
   "name": "@mattkrick/json-deduper",
-  "version": "0.0.1",
   "description": "Compress JSON trees by deduplicating nested objects, strings, and numbers",
   "author": "Matt Krick <matt.krick@gmail.com>",
+  "license": "MIT",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/mattkrick/json-deduper"
@@ -13,17 +14,46 @@
     "dedupe",
     "graphql"
   ],
+  "homepage": "https://github.com/mattkrick/json-deduper",
+  "bugs": {
+    "url": "https://github.com/mattkrick/json-deduper/issues"
+  },
   "main": "./dist/index.js",
-  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --fix {src,bench}/**/*.{ts,tsx}",
+    "precommit": "lint-staged && tsc"
+  },
   "devDependencies": {
     "@types/node": "^12.0.10",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "graphql-crunch": "^2.1.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^9.2.0",
     "msgpack-lite": "^0.1.26",
+    "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2",
     "zlib": "^1.0.5"
   },
   "peerDependencies": {
     "tslib": "^1.10.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "all"
   }
 }
